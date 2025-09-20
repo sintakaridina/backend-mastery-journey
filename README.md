@@ -4,7 +4,7 @@ This repository contains implementations from the backend mastery course, includ
 
 ## Current Projects
 
-### Rate Limiter API (002-title-rate-limiter)
+### Rate Limiter API (001-rate-limiter)
 
 A production-ready rate limiting API built with Go, PostgreSQL, and Redis.
 
@@ -18,7 +18,7 @@ A production-ready rate limiting API built with Go, PostgreSQL, and Redis.
 **Quick Start:**
 ```bash
 # Switch to the rate limiter branch
-git checkout 002-title-rate-limiter
+git checkout 001-rate-limiter
 
 # Start all services
 docker-compose up -d
@@ -46,7 +46,7 @@ curl http://localhost:8080/health
 
 2. **Switch to Rate Limiter Branch:**
    ```bash
-   git checkout 002-title-rate-limiter
+   git checkout 001-rate-limiter
    ```
 
 3. **Start the Services:**
