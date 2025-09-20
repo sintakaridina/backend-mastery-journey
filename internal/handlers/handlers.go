@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"strconv"
 
 	"grpc-firstls/internal/database"
 	"grpc-firstls/internal/services"
@@ -25,14 +24,14 @@ func NewHandler(apiKeyService *services.APIKeyService, rateLimitService *service
 func (h *Handler) SetupRoutes(router *gin.Engine) {
 	// Health check endpoint (no rate limiting)
 	router.GET("/health", h.HealthCheck)
-	
+
 	// API key management endpoints (admin functionality)
 	admin := router.Group("/admin")
 	{
 		admin.POST("/api-keys", h.CreateAPIKey)
 		admin.DELETE("/api-keys/:key", h.DeactivateAPIKey)
 	}
-	
+
 	// Protected endpoints (with rate limiting)
 	api := router.Group("/api")
 	{
@@ -51,9 +50,9 @@ func (h *Handler) HealthCheck(c *gin.Context) {
 
 func (h *Handler) CreateAPIKey(c *gin.Context) {
 	var request struct {
-		Name                  string `json:"name" binding:"required"`
-		RateLimitRequests     int    `json:"rate_limit_requests"`
-		RateLimitWindowSeconds int   `json:"rate_limit_window_seconds"`
+		Name                   string `json:"name" binding:"required"`
+		RateLimitRequests      int    `json:"rate_limit_requests"`
+		RateLimitWindowSeconds int    `json:"rate_limit_window_seconds"`
 	}
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -89,7 +88,7 @@ func (h *Handler) CreateAPIKey(c *gin.Context) {
 		"api_key": apiKey,
 		"name":    request.Name,
 		"rate_limit": gin.H{
-			"requests": request.RateLimitRequests,
+			"requests":       request.RateLimitRequests,
 			"window_seconds": request.RateLimitWindowSeconds,
 		},
 	})
@@ -129,7 +128,7 @@ func (h *Handler) GetStatus(c *gin.Context) {
 	}
 
 	apiKeyRecord := apiKey.(*database.APIKey)
-	
+
 	c.JSON(http.StatusOK, gin.H{
 		"status": "authenticated",
 		"api_key": gin.H{
@@ -149,7 +148,7 @@ func (h *Handler) GetRateLimitStatus(c *gin.Context) {
 	}
 
 	apiKeyRecord := apiKey.(*database.APIKey)
-	
+
 	rateLimitResult, err := h.rateLimitService.GetRateLimitStatus(c.Request.Context(), apiKeyRecord)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -161,10 +160,10 @@ func (h *Handler) GetRateLimitStatus(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"rate_limit": gin.H{
-			"limit":     rateLimitResult.Limit,
-			"remaining": rateLimitResult.Remaining,
+			"limit":      rateLimitResult.Limit,
+			"remaining":  rateLimitResult.Remaining,
 			"reset_time": rateLimitResult.ResetTime,
-			"allowed":   rateLimitResult.Allowed,
+			"allowed":    rateLimitResult.Allowed,
 		},
 	})
 }
@@ -179,7 +178,7 @@ func (h *Handler) TestEndpoint(c *gin.Context) {
 	}
 
 	apiKeyRecord := apiKey.(*database.APIKey)
-	
+
 	var request struct {
 		Message string `json:"message"`
 	}

@@ -13,8 +13,8 @@ import (
 
 func RateLimit(apiKeyService *services.APIKeyService, rateLimitService *services.RateLimitService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Skip rate limiting for health check endpoints
-		if c.Request.URL.Path == "/health" || c.Request.URL.Path == "/metrics" {
+		// Skip rate limiting for health check and admin endpoints
+		if c.Request.URL.Path == "/health" || c.Request.URL.Path == "/metrics" || strings.HasPrefix(c.Request.URL.Path, "/admin") {
 			c.Next()
 			return
 		}
@@ -60,16 +60,16 @@ func RateLimit(apiKeyService *services.APIKeyService, rateLimitService *services
 			return
 		}
 
-	// Add rate limit headers
-	c.Header("X-RateLimit-Limit", strconv.FormatInt(rateLimitResult.Limit, 10))
-	c.Header("X-RateLimit-Remaining", strconv.FormatInt(rateLimitResult.Remaining, 10))
-	c.Header("X-RateLimit-Reset", rateLimitResult.ResetTime.Format(time.RFC3339))
+		// Add rate limit headers
+		c.Header("X-RateLimit-Limit", strconv.FormatInt(rateLimitResult.Limit, 10))
+		c.Header("X-RateLimit-Remaining", strconv.FormatInt(rateLimitResult.Remaining, 10))
+		c.Header("X-RateLimit-Reset", rateLimitResult.ResetTime.Format(time.RFC3339))
 
 		// Check if rate limit exceeded
 		if !rateLimitResult.Allowed {
 			c.JSON(http.StatusTooManyRequests, gin.H{
-				"error":   "Rate limit exceeded",
-				"message": "You have exceeded your rate limit. Please try again later.",
+				"error":       "Rate limit exceeded",
+				"message":     "You have exceeded your rate limit. Please try again later.",
 				"retry_after": int(time.Until(rateLimitResult.ResetTime).Seconds()),
 			})
 			c.Abort()
