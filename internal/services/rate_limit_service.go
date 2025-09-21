@@ -11,11 +11,11 @@ import (
 )
 
 type RateLimitService struct {
-	redisClient *redis.Client
+	redisClient redis.ClientInterface
 	config      config.RateLimitConfig
 }
 
-func NewRateLimitService(redisClient *redis.Client, config config.RateLimitConfig) *RateLimitService {
+func NewRateLimitService(redisClient redis.ClientInterface, config config.RateLimitConfig) *RateLimitService {
 	return &RateLimitService{
 		redisClient: redisClient,
 		config:      config,

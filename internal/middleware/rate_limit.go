@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RateLimit(apiKeyService *services.APIKeyService, rateLimitService *services.RateLimitService) gin.HandlerFunc {
+func RateLimit(apiKeyService services.APIKeyServiceInterface, rateLimitService services.RateLimitServiceInterface) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Skip rate limiting for health check and admin endpoints
 		if c.Request.URL.Path == "/health" || c.Request.URL.Path == "/metrics" || strings.HasPrefix(c.Request.URL.Path, "/admin") {

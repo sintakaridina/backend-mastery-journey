@@ -1,0 +1,22 @@
+{
+    "name": "Go + Docker Dev",
+    "image": "mcr.microsoft.com/devcontainers/go:1.21",
+    "features": {
+      "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
+    "postCreateCommand": "go mod tidy",
+    "forwardPorts": [8080],
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "go.useLanguageServer": true,
+          "go.toolsManagement.autoUpdate": true
+        },
+        "extensions": [
+          "golang.go",
+          "ms-azuretools.vscode-docker"
+        ]
+      }
+    }
+  }
+  

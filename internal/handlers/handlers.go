@@ -10,11 +10,11 @@ import (
 )
 
 type Handler struct {
-	apiKeyService    *services.APIKeyService
-	rateLimitService *services.RateLimitService
+	apiKeyService    services.APIKeyServiceInterface
+	rateLimitService services.RateLimitServiceInterface
 }
 
-func NewHandler(apiKeyService *services.APIKeyService, rateLimitService *services.RateLimitService) *Handler {
+func NewHandler(apiKeyService services.APIKeyServiceInterface, rateLimitService services.RateLimitServiceInterface) *Handler {
 	return &Handler{
 		apiKeyService:    apiKeyService,
 		rateLimitService: rateLimitService,
